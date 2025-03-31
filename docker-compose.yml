@@ -1,10 +1,31 @@
-version: '3'
-
 services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    environment:
+      # Default user and database will be created using `init-defaults.sh` script
+      CLICKHOUSE_USER: clickhouse-user
+      CLICKHOUSE_PASSWORD: secret
+    ports:
+      - "8123:8123" # HTTP
+      - "9000:9000" # Native
+    volumes:
+      - /var/lib/clickhouse
+
+  python-script:
+    build: ./python
+    container_name: python-script
+    depends_on:
+      - clickhouse
+    volumes:
+      - ./data:/usr/src/app/data 
+    command: python script.py
+
   tensorflow:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: ./tensorflow
+    container_name: tensorflow
+    depends_on:
+      - clickhouse
     volumes:
       - ./workspace:/workspace
     ports:
