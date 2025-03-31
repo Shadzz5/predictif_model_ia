@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 python:3.9-slim
+FROM python:3.9-slim
 
 # Variables d'environnement pour Python
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -16,12 +16,12 @@ RUN apt-get update && apt-get install -y \
 # Installation des packages Python
 RUN pip3 install --upgrade pip
 RUN pip3 install \
-    tensorflow==2.13.0 \
+    tensorflow \
     matplotlib \
     pandas \
     scikit-learn \
     seaborn \
-    opencv-python \ 
+    opencv-python \
     jupyter \
     jupyterlab \
     tensorboard \
