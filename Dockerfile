@@ -1,23 +1,23 @@
-FROM tensorflow/tensorflow:latest
+FROM python:3.9-slim
 
-# Assurer la compatibilité avec architecture ARM
-ENV TF_ENABLE_ONEDNN_OPTS=0
+# Variables d'environnement pour Python
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Installation des dépendances supplémentaires
+# Installation des dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     wget \
     curl \
-    python3-pip \
-    python3-dev \
+    build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Installation des packages Python couramment utilisés
+# Installation des packages Python (spécifique pour Mac ARM)
 RUN pip3 install --upgrade pip
 RUN pip3 install \
+    tensorflow==2.13.0 \
     matplotlib \
-    tensorflow \
     pandas \
     scikit-learn \
     seaborn \
@@ -27,11 +27,14 @@ RUN pip3 install \
     tensorboard \
     protobuf
 
+# Vérification que TensorFlow est bien installé
+RUN python -c "import tensorflow as tf; print(tf.__version__)"
+
 # Création et définition du répertoire de travail
 WORKDIR /workspace
 
 # Exposer les ports pour Jupyter et TensorBoard
 EXPOSE 8888 6006
 
-# Commande par défaut (remplacée par celle dans docker-compose)
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+# Commande par défaut
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]

@@ -11,4 +11,3 @@ services:
       - "8888:8888"  # Pour Jupyter Notebook
       - "6006:6006"  # Pour TensorBoard
     platform: linux/arm64  # Spécifique pour Mac ARM
-    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
