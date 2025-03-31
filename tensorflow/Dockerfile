@@ -24,6 +24,7 @@ RUN pip3 install \
     opencv-python \
     jupyter \
     jupyterlab \
+    clickhouse_connect \
     tensorboard \
     protobuf
 
