@@ -8,7 +8,6 @@ services:
       CLICKHOUSE_PASSWORD: secret
     ports:
       - "8123:8123" # HTTP
-      - "9000:9000" # Native
     volumes:
       - /var/lib/clickhouse
 
@@ -22,7 +21,7 @@ services:
     command: python script.py
 
   tensorflow:
-    build: ./tensorflow
+    build: .
     container_name: tensorflow
     depends_on:
       - clickhouse
