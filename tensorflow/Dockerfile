@@ -1,4 +1,5 @@
-FROM python:3.9-slim
+# FROM python:3.9-slim
+FROM tensorflow/tensorflow:2.13.0-gpu
 
 # Variables d'environnement pour Python
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -15,8 +16,8 @@ RUN apt-get update && apt-get install -y \
 
 # Installation des packages Python
 RUN pip3 install --upgrade pip
+# tensorflow \
 RUN pip3 install \
-    tensorflow \
     matplotlib \
     pandas \
     scikit-learn \

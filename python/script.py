@@ -6,7 +6,7 @@ import clickhouse_connect
 start = time.time()
 print("Début du traitement")
 # Connexion à la base ClickHouse
-client = clickhouse_connect.get_client(host='clickhouse', port=8123, username='clickhouse-user', password='secret')
+client = clickhouse_connect.get_client(host='localhost', port=8123, username='clickhouse-user', password='secret')
 
 # Création de la table dans ClickHouse (si elle n'existe pas)
 client.command('''
@@ -37,6 +37,9 @@ def insert_data_from_csv(csv_file, mag_csv_file):
     df = df.where(pd.notnull(df), None)
     df_mag = df_mag.where(pd.notnull(df_mag), None)
 
+    # **NOUVEAU : Remplir les valeurs nulles par les dernières valeurs valides**
+    df[['Speed', 'Density']] = df[['Speed', 'Density']].fillna(method='ffill')
+
     # Fusionner les deux DataFrames sur la colonne 'Date'
     df_merged = pd.merge(df, df_mag, on='Date', how='left')
 
@@ -51,8 +54,8 @@ def insert_data_from_csv(csv_file, mag_csv_file):
 for year in range(2017, 2024):
     year_start = time.time()
     print(f"Traitement de l'année {year}")
-    directory = f'/usr/src/app/data/solarwinds/solarwinds-dscovr-compiled/{year}' # Chemin vers le répertoire de l'année
-    mag_directory = f'/usr/src/app/data/mag/mag-kiruna-compiled/{year}' # Chemin vers le répertoire de l'année
+    directory = f'C:/Users/fabien/Desktop/AI test/solarwinds/solarwinds-dscovr-compiled/{year}' # Chemin vers le répertoire de l'année
+    mag_directory = f'C:/Users/fabien/Desktop/AI test/mag/mag-kiruna-compiled/{year}' # Chemin vers le répertoire de l'année
 
     if os.path.exists(directory):
         # Parcours des fichiers dans le répertoire
